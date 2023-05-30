@@ -4,24 +4,23 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=--max-old-space-size=4096 vite",
-    "serve": "pnpm dev",
+    "serve": "yarn dev",
     "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "build:staging": "rimraf dist && vite build --mode staging",
     "report": "rimraf dist && vite build",
     "preview": "vite preview",
-    "preview:build": "pnpm build && vite preview",
+    "preview:build": "yarn build && vite preview",
     "typecheck": "tsc --noEmit && vue-tsc --noEmit --skipLibCheck",
     "svgo": "svgo -f src/assets/svg -o src/assets/svg",
     "cloc": "NODE_OPTIONS=--max-old-space-size=4096 cloc . --exclude-dir=node_modules --exclude-lang=YAML",
-    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && pnpm install",
+    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && yarn install",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --cache --fix \"**/*.{html,vue,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "lint:pretty": "pretty-quick --staged",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
-    "prepare": "husky install",
-    "preinstall": "npx only-allow pnpm"
+    "lint": "yarn lint:eslint && yarn lint:prettier && yarn lint:stylelint",
+    "prepare": "husky install"
   },
   "browserslist": [
     "> 1%",
@@ -115,19 +114,6 @@
     "vite-svg-loader": "^4.0.0",
     "vue-eslint-parser": "^9.2.1",
     "vue-tsc": "^1.6.4"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "rollup",
-        "webpack",
-        "core-js"
-      ]
-    },
-    "allowedDeprecatedVersions": {
-      "sourcemap-codec": "*",
-      "stable": "*"
-    }
   },
   "repository": "git@github.com:pure-admin/pure-admin-thin.git",
   "author": "xiaoxian521",
