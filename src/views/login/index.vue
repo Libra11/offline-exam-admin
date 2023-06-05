@@ -68,6 +68,7 @@ function onkeypress({ code }: KeyboardEvent) {
 }
 
 onMounted(() => {
+  console.log(import.meta.env.VITE_ELECTRON);
   window.document.addEventListener("keypress", onkeypress);
 });
 
