@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:38:16
- * @LastEditTime: 2023-05-30 11:24:57
+ * @LastEditTime: 2023-06-05 15:45:33
  * @LastEditors: Libra
  * @Description:
  */
@@ -18,6 +18,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import removeConsole from "vite-plugin-remove-console";
 import themePreprocessorPlugin from "@pureadmin/theme";
 import { genScssMultipleScopeVars } from "../src/layout/theme";
+import renderer from "vite-plugin-electron-renderer";
 
 export function getPluginsList(
   command: string,
@@ -72,6 +73,7 @@ export function getPluginsList(
           outDir: "dist-electron"
         }
       }
-    })
+    }),
+    renderer()
   ];
 }

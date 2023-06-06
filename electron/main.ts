@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:44:24
- * @LastEditTime: 2023-05-30 11:15:05
+ * @LastEditTime: 2023-06-05 16:11:23
  * @LastEditors: Libra
  * @Description:/*
  * @Author: Libra
@@ -11,13 +11,15 @@
  * @FilePath: /libra-vue3-all-in-one-template/electron/electron.js
  */
 import path from "path";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
+import { discoverHosts } from "./arp/index";
+import createSocket from "./socket";
 
 const isDev = process.env.VITE_DEV_SERVER_URL;
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
-
+let win: BrowserWindow | null = null;
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -26,15 +28,15 @@ function createWindow() {
       webSecurity: false
     }
   });
-
-  mainWindow.loadURL(
+  win.loadURL(
     isDev
       ? "http://localhost:8848"
       : `file://${path.join(__dirname, "../dist/index.html")}`
   );
   if (isDev) {
-    mainWindow.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
+  createSocket(win.webContents);
 }
 
 app.whenReady().then(() => {
@@ -48,4 +50,9 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
   app.quit();
+});
+
+ipcMain.on("connectAllClient", () => {
+  if (!win) return;
+  discoverHosts(win.webContents);
 });
