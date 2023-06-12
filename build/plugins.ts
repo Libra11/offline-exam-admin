@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:38:16
- * @LastEditTime: 2023-06-05 15:45:33
+ * @LastEditTime: 2023-06-12 11:20:02
  * @LastEditors: Libra
  * @Description:
  */
@@ -23,7 +23,8 @@ import renderer from "vite-plugin-electron-renderer";
 export function getPluginsList(
   command: string,
   VITE_CDN: boolean,
-  VITE_COMPRESSION: ViteCompression
+  VITE_COMPRESSION: ViteCompression,
+  VITE_ELECTRON: boolean
 ) {
   const prodMock = true;
   const lifecycle = process.env.npm_lifecycle_event;
@@ -64,16 +65,18 @@ export function getPluginsList(
     lifecycle === "report"
       ? visualizer({ open: true, brotliSize: true, filename: "report.html" })
       : null,
-    electron({
-      entry: "electron/main.ts",
-      vite: {
-        build: {
-          sourcemap,
-          minify: isBuild,
-          outDir: "dist-electron"
-        }
-      }
-    }),
-    renderer()
+    VITE_ELECTRON
+      ? electron({
+          entry: "electron/main.ts",
+          vite: {
+            build: {
+              sourcemap,
+              minify: isBuild,
+              outDir: "dist-electron"
+            }
+          }
+        })
+      : null,
+    VITE_ELECTRON ? renderer() : null
   ];
 }

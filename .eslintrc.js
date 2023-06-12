@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:54:54
+ * @LastEditors: Libra
+ * @Description:
+ */
 module.exports = {
   root: true,
   env: {
@@ -84,6 +90,7 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-empty-interface": "off",
     "vue/html-self-closing": [
       "error",
       {

@@ -10,7 +10,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { initRouter, getTopMenu } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
@@ -32,9 +32,10 @@ const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 const { title } = useNav();
 
-const ruleForm = reactive({
-  username: "admin",
-  password: "admin123"
+const ruleForm = ref({
+  username: "",
+  password: "",
+  code: ""
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
@@ -43,7 +44,10 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({
+          username: ruleForm.value.username,
+          password: "admin123"
+        })
         .then(res => {
           if (res.success) {
             // 获取后端路由
@@ -68,20 +72,33 @@ function onkeypress({ code }: KeyboardEvent) {
 }
 
 onMounted(() => {
-  console.log(import.meta.env.VITE_ELECTRON);
   window.document.addEventListener("keypress", onkeypress);
 });
 
 onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
 });
+
+const activeName = ref("first");
+
+const handleClick = () => {
+  // clear form
+  ruleForm.value = {
+    username: "",
+    password: "",
+    code: ""
+  };
+};
+
+// import.meta.env.VITE_ELECTRON is string, I don't know why
+const isElectron = ref(String(import.meta.env.VITE_ELECTRON) === "true");
 </script>
 
 <template>
   <div class="select-none">
     <img :src="bg" class="wave" />
     <div class="flex-c absolute right-5 top-3">
-      <!-- 主题 -->
+      <!-- theme -->
       <el-switch
         v-model="dataTheme"
         inline-prompt
@@ -90,7 +107,131 @@ onBeforeUnmount(() => {
         @change="dataThemeChange"
       />
     </div>
-    <div class="login-container">
+    <el-tabs
+      v-if="isElectron"
+      v-model="activeName"
+      type="card"
+      class="demo-tabs"
+      @tab-click="handleClick"
+    >
+      <el-tab-pane label="Admin" name="first"
+        ><div class="login-container">
+          <div class="img">
+            <component :is="toRaw(illustration)" />
+          </div>
+          <div class="login-box">
+            <div class="login-form">
+              <avatar class="avatar" />
+              <Motion>
+                <h2 class="outline-none">{{ title }}</h2>
+              </Motion>
+
+              <el-form
+                ref="ruleFormRef"
+                :model="ruleForm"
+                :rules="loginRules"
+                size="large"
+              >
+                <Motion :delay="100">
+                  <el-form-item
+                    :rules="[
+                      {
+                        required: true,
+                        message: '请输入账号',
+                        trigger: 'blur'
+                      }
+                    ]"
+                    prop="username"
+                  >
+                    <el-input
+                      clearable
+                      v-model="ruleForm.username"
+                      placeholder="账号"
+                      :prefix-icon="useRenderIcon(User)"
+                    />
+                  </el-form-item>
+                </Motion>
+
+                <Motion :delay="150">
+                  <el-form-item prop="password">
+                    <el-input
+                      clearable
+                      show-password
+                      v-model="ruleForm.password"
+                      placeholder="密码"
+                      :prefix-icon="useRenderIcon(Lock)"
+                    />
+                  </el-form-item>
+                </Motion>
+
+                <Motion :delay="200">
+                  <div class="text-right text-gray-500 text-sm cursor-pointer">
+                    离线登录
+                  </div>
+                </Motion>
+                <Motion :delay="250">
+                  <el-button
+                    class="w-full mt-4"
+                    size="default"
+                    type="primary"
+                    :loading="loading"
+                    @click="onLogin(ruleFormRef)"
+                  >
+                    登录
+                  </el-button>
+                </Motion>
+              </el-form>
+            </div>
+          </div>
+        </div></el-tab-pane
+      >
+      <el-tab-pane label="Manager" name="second"
+        ><div class="login-container">
+          <div class="img">
+            <component :is="toRaw(illustration)" />
+          </div>
+          <div class="login-box">
+            <div class="login-form">
+              <avatar class="avatar" />
+              <Motion>
+                <h2 class="outline-none">{{ title }}</h2>
+              </Motion>
+
+              <el-form
+                ref="ruleFormRef"
+                :model="ruleForm"
+                :rules="loginRules"
+                size="large"
+              >
+                <Motion :delay="150">
+                  <el-form-item prop="code">
+                    <el-input
+                      clearable
+                      v-model="ruleForm.code"
+                      placeholder="登录码"
+                      :prefix-icon="useRenderIcon(Lock)"
+                    />
+                  </el-form-item>
+                </Motion>
+
+                <Motion :delay="250">
+                  <el-button
+                    class="w-full mt-4"
+                    size="default"
+                    type="primary"
+                    :loading="loading"
+                    @click="onLogin(ruleFormRef)"
+                  >
+                    登录
+                  </el-button>
+                </Motion>
+              </el-form>
+            </div>
+          </div>
+        </div></el-tab-pane
+      >
+    </el-tabs>
+    <div class="login-container" v-else>
       <div class="img">
         <component :is="toRaw(illustration)" />
       </div>

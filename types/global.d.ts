@@ -1,9 +1,10 @@
-import type {
-  VNode,
-  FunctionalComponent,
-  PropType as VuePropType,
-  ComponentPublicInstance
-} from "vue";
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
+import type { FunctionalComponent } from "vue";
 import type { ECharts } from "echarts";
 import type { IconifyIcon } from "@iconify/vue";
 import type { TableColumns } from "@pureadmin/table";
@@ -64,7 +65,7 @@ declare global {
     VITE_ROUTER_HISTORY: string;
     VITE_CDN: boolean;
     VITE_HIDE_HOME: string;
-    VITE_ELECTRON: string;
+    VITE_ELECTRON: boolean;
     VITE_COMPRESSION: ViteCompression;
   }
 

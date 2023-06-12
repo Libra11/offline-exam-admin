@@ -1,15 +1,21 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
 const Layout = () => import("@/layout/index.vue");
 
 export default [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/login/index.vue"),
     meta: {
       title: "登录",
       showLink: false,
       rank: 101
-    }
+    },
+    component: () => import("@/views/login/index.vue")
   },
   {
     path: "/redirect",

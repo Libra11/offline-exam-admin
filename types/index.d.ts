@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
 // 此文件跟同级目录的 global.d.ts 文件一样也是全局类型声明，只不过这里存放一些零散的全局类型，无需引入直接在 .vue 、.ts 、.tsx 文件使用即可获得类型提示
 
 type RefType<T> = T | null;
@@ -70,7 +76,3 @@ interface PromiseFn<T = any, R = T> {
 interface ComponentElRef<T extends HTMLElement = HTMLDivElement> {
   $el: T;
 }
-
-function parseInt(s: string | number, radix?: number): number;
-
-function parseFloat(string: string | number): number;

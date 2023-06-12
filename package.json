@@ -1,12 +1,13 @@
 {
-  "name": "pure-admin-thin",
+  "name": "offline-exam-admin",
   "version": "4.1.0",
   "private": true,
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "NODE_OPTIONS=--max-old-space-size=4096 vite",
     "serve": "yarn dev",
-    "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build && electron-builder",
+    "build:electron": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build && electron-builder",
+    "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "build:staging": "rimraf dist && vite build --mode staging",
     "report": "rimraf dist && vite build",
     "preview": "vite preview",
@@ -42,6 +43,7 @@
     "element-plus": "^2.3.4",
     "element-resize-detector": "^1.2.4",
     "js-cookie": "^3.0.5",
+    "local-devices": "^4.0.0",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
     "node-arp": "^1.0.6",
@@ -126,11 +128,10 @@
     "vue-eslint-parser": "^9.2.1",
     "vue-tsc": "^1.6.4"
   },
-  "repository": "git@github.com:pure-admin/pure-admin-thin.git",
-  "author": "xiaoxian521",
+  "author": "Libra",
   "license": "MIT",
   "build": {
-    "appId": "YourAppID",
+    "appId": "offline-exam-admin",
     "asar": false,
     "directories": {
       "buildResources": "assets",

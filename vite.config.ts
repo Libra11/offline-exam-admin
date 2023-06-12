@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:38:16
- * @LastEditTime: 2023-05-30 11:41:33
+ * @LastEditTime: 2023-06-12 11:19:26
  * @LastEditors: Libra
  * @Description:
  */
@@ -34,8 +34,13 @@ const __APP_INFO__ = {
 };
 
 export default ({ command, mode }: ConfigEnv): UserConfigExport => {
-  const { VITE_CDN, VITE_PORT, VITE_COMPRESSION, VITE_PUBLIC_PATH } =
-    warpperEnv(loadEnv(mode, root));
+  const {
+    VITE_CDN,
+    VITE_PORT,
+    VITE_COMPRESSION,
+    VITE_PUBLIC_PATH,
+    VITE_ELECTRON
+  } = warpperEnv(loadEnv(mode, root));
   return {
     base: VITE_PUBLIC_PATH,
     root,
@@ -52,7 +57,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {}
     },
-    plugins: getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
+    plugins: getPluginsList(command, VITE_CDN, VITE_COMPRESSION, VITE_ELECTRON),
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
     optimizeDeps: {
       include,

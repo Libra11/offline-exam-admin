@@ -1,17 +1,12 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:44:24
- * @LastEditTime: 2023-06-05 16:11:23
+ * @LastEditTime: 2023-06-12 09:46:50
  * @LastEditors: Libra
  * @Description:/*
- * @Author: Libra
- * @Date: 2023-03-08 16:59:46
- * @LastEditors: Libra
- * @Description:
- * @FilePath: /libra-vue3-all-in-one-template/electron/electron.js
  */
 import path from "path";
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, IpcMainEvent } from "electron";
 import { discoverHosts } from "./arp/index";
 import createSocket from "./socket";
 
@@ -52,7 +47,7 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 
-ipcMain.on("connectAllClient", () => {
+ipcMain.on("connectAllClient", (event: IpcMainEvent, ip: string) => {
   if (!win) return;
-  discoverHosts(win.webContents);
+  discoverHosts(win.webContents, JSON.parse(ip));
 });

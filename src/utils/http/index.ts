@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
 import Axios, {
   AxiosInstance,
   AxiosRequestConfig,
@@ -8,7 +14,7 @@ import {
   RequestMethods,
   PureHttpResponse,
   PureHttpRequestConfig
-} from "./types.d";
+} from "./types";
 import { stringify } from "qs";
 import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
@@ -80,7 +86,7 @@ class PureHttp {
               const data = getToken();
               if (data) {
                 const now = new Date().getTime();
-                const expired = parseInt(data.expires) - now <= 0;
+                const expired = data.expires - now <= 0;
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
                     PureHttp.isRefreshing = true;
