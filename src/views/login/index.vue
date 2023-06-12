@@ -12,6 +12,7 @@ import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { useElectron } from "@/layout/hooks/useElectron";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -90,8 +91,7 @@ const handleClick = () => {
   };
 };
 
-// import.meta.env.VITE_ELECTRON is string, I don't know why
-const isElectron = ref(String(import.meta.env.VITE_ELECTRON) === "true");
+const { isElectron } = useElectron();
 </script>
 
 <template>
@@ -108,7 +108,7 @@ const isElectron = ref(String(import.meta.env.VITE_ELECTRON) === "true");
       />
     </div>
     <el-tabs
-      v-if="isElectron"
+      v-if="isElectron()"
       v-model="activeName"
       type="card"
       class="demo-tabs"

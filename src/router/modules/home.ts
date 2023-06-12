@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
 const { VITE_HIDE_HOME } = import.meta.env;
 const Layout = () => import("@/layout/index.vue");
 

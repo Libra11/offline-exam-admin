@@ -1,3 +1,9 @@
+<!--
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description: 
+-->
 <script setup lang="ts">
 import {
   ref,
@@ -23,6 +29,7 @@ import { resetRouter } from "@/router";
 import { removeToken } from "@/utils/auth";
 import { routerArrays } from "@/layout/types";
 import { useNav } from "@/layout/hooks/useNav";
+import { useElectron } from "@/layout/hooks/useElectron";
 import { useAppStoreHook } from "@/store/modules/app";
 import { toggleTheme } from "@pureadmin/theme/dist/browser-utils";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
@@ -36,6 +43,7 @@ import Logout from "@iconify-icons/ri/logout-circle-r-line";
 const router = useRouter();
 const { isDark } = useDark();
 const { device, tooltipEffect } = useNav();
+const { isElectron } = useElectron();
 const { $storage } = useGlobal<GlobalPropertiesApi>();
 
 const mixRef = ref();
@@ -53,7 +61,10 @@ const {
 
 /* body添加layout属性，作用于src/style/sidebar.scss */
 if (unref(layoutTheme)) {
-  const layout = unref(layoutTheme).layout;
+  let layout = unref(layoutTheme).layout;
+  if (isElectron()) {
+    layout = "horizontal";
+  }
   const theme = unref(layoutTheme).theme;
   toggleTheme({
     scopeName: `layout-theme-${theme}`

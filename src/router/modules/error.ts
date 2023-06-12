@@ -1,10 +1,16 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-05 14:55:10
+ * @LastEditors: Libra
+ * @Description:
+ */
 export default {
   path: "/error",
   redirect: "/error/403",
   meta: {
     icon: "informationLine",
     title: "异常页面",
-    // showLink: false,
+    showLink: false,
     rank: 9
   },
   children: [

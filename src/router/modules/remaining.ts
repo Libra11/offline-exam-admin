@@ -18,6 +18,16 @@ export default [
     component: () => import("@/views/login/index.vue")
   },
   {
+    path: "/login",
+    name: "Login",
+    meta: {
+      title: "登录",
+      showLink: false,
+      rank: 101
+    },
+    component: () => import("@/views/login/index.vue")
+  },
+  {
     path: "/redirect",
     component: Layout,
     meta: {
