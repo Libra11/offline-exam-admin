@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:38:16
- * @LastEditTime: 2023-06-12 11:19:26
+ * @LastEditTime: 2023-06-14 13:24:11
  * @LastEditors: Libra
  * @Description:
  */
@@ -24,6 +24,7 @@ const pathResolve = (dir: string): string => {
 /** 设置别名 */
 const alias: Record<string, string> = {
   "@": pathResolve("src"),
+  "@electron": pathResolve("electron"),
   "@build": pathResolve("build")
 };
 

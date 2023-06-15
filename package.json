@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "dev": "vite",
     "serve": "yarn dev",
     "build:electron": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build && electron-builder",
     "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=8192 vite build",

@@ -1,38 +1,31 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-17 09:44:22
- * @LastEditTime: 2023-06-09 15:17:28
+ * @LastEditTime: 2023-06-15 10:22:45
  * @LastEditors: Libra
- * @Description: dgram udp
+ * @Description: arp
  */
 import { getLocalIpAddress } from "../util";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { client_websocket_port } from "../config";
-import type { WebContents } from "electron";
+import { type WebContents } from "electron";
 import { MessageType } from "../../src/enum";
 import find, { IDevice } from "local-devices";
+
+const sockets = new Map<string, Socket>();
 
 interface Host {
   ip: string;
   localIP: string;
 }
 
-interface ClientItem {
-  id: string;
+export interface ClientItem {
   ip: string;
-  status: "online" | "offline" | "launched";
+  os: string;
+  seatNum: number;
+  useStatus: "free" | "used";
+  onlineStatus: "online" | "offline" | "launched";
   version: string;
-}
-
-const hosts = new Map<string, ClientItem>();
-
-export function updateHostsInfo(data: ClientItem, webContents: WebContents) {
-  // TODO: update single host instead of all hosts, send map instead of array
-  hosts.set(data.ip, data);
-  webContents.send("host", JSON.stringify(data));
-}
-export function getHostById(id: string) {
-  return Array.from(hosts.values()).find(item => item.id === id);
 }
 
 function discoverHosts(webContents: WebContents, ipObj: any) {
@@ -40,66 +33,73 @@ function discoverHosts(webContents: WebContents, ipObj: any) {
   if (!localIP) return;
   const subnet = ipObj.first + "." + ipObj.second + "." + ipObj.third;
   find({
-    address: `${subnet}.${ipObj.fourthStart}-${subnet}.${ipObj.fourthEnd}`
+    address: `${subnet}.${ipObj.fourthStart}-${subnet}.${ipObj.fourthEnd}`,
+    skipNameResolution: true
   }).then((devices: Array<IDevice>) => {
     devices.forEach((device: IDevice) => {
       const host: Host = { ip: device.ip, localIP };
-      hosts.set(device.ip, {
-        id: "",
-        ip: device.ip,
-        status: "offline",
-        version: ""
-      });
-      notifyHosts(host);
+      notifyClients(host, webContents);
     });
-    // webContents.send("hosts", JSON.stringify(Array.from(hosts.values())));
-    webContents.send("hosts", JSON.stringify(Object.fromEntries(hosts)));
   });
 }
 
-// function discoverHosts(webContents: WebContents, ipObj: any) {
-//   const localIP = getLocalIpAddress();
-//   if (!localIP) return;
-//   const subnet = ipObj.first + "." + ipObj.second + "." + ipObj.third;
-//   for (let i = ipObj.fourthStart; i <= ipObj.fourthEnd; i++) {
-//     const ip = subnet + "." + i;
-//     arp.getMAC(ip, (err: string, mac: string) => {
-//       if (!err && mac) {
-//         const host: Host = { ip, localIP };
-//         hosts.set(ip, {
-//           id: "",
-//           ip,
-//           status: "offline",
-//           version: ""
-//         });
-//         if (hosts.size === ipObj.fourthEnd - ipObj.fourthStart + 1) {
-//           webContents.send("hosts", JSON.stringify(Array.from(hosts.values())));
-//         }
-//         notifyHosts(host);
-//       } else {
-//         console.log("err", err);
-//       }
-//     });
-//   }
-// }
+export function sendLocalIptoClient(localIp: string, clients: Array<string>) {
+  clients.forEach(ip => {
+    const socket = sockets.get(ip);
+    socket &&
+      socket.emit("message", {
+        type: MessageType.ADMIN_CONNECT,
+        data: {
+          serverIp: localIp,
+          localIp: ip
+        }
+      });
+  });
+}
 
-function notifyHosts(host: Host) {
+function notifyClients(host: Host, webContents: WebContents) {
   const socket = io(`http://${host.ip}:${client_websocket_port}`);
-  const msg = {
-    type: MessageType.ADMIN_CONNECT,
-    data: {
-      serverIp: host.localIP,
-      localIp: host.ip
-    }
-  };
   socket.on("error", err => {
     console.log("socket error", err);
   });
   socket.on("connect", () => {
-    socket.emit("message", msg);
+    console.log("socket connected");
+    // disconnect old socket if exists
+    const oldSocket = sockets.get(host.ip);
+    oldSocket && oldSocket.disconnect();
+    sockets.set(host.ip, socket);
   });
   socket.on("disconnect", () => {
     console.log("socket disconnected");
   });
+  socket.on("message", message => {
+    console.log(message);
+    if (message.type === MessageType.CLIENT_STATUS) {
+      const { useStatus, version, os } = message.data;
+      const h: ClientItem = {
+        os,
+        ip: host.ip,
+        seatNum: 0,
+        onlineStatus: "offline",
+        version,
+        useStatus: useStatus
+      };
+      webContents.send("host", JSON.stringify(h));
+    }
+  });
+}
+
+export function updateClientInfo(
+  data: any,
+  webContents: WebContents,
+  onlineStatus: string
+) {
+  const { ip, version } = data;
+  const clientInfo = {
+    ip,
+    onlineStatus,
+    version
+  };
+  webContents.send("host-update", JSON.stringify(clientInfo));
 }
 export { discoverHosts };

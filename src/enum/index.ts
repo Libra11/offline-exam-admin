@@ -4,7 +4,8 @@
  * @LastEditors: Libra
  * @Description:
  */
-export enum MessageType {
-  ADMIN_CONNECT = "ADMIN_CONNECT",
-  CLIENT_INFO = "CLIENT_INFO"
-}
+export const MessageType = {
+  ADMIN_CONNECT: "ADMIN_CONNECT",
+  CLIENT_INFO: "CLIENT_INFO",
+  CLIENT_STATUS: "CLIENT_STATUS"
+};

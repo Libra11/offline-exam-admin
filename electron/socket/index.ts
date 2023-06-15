@@ -1,34 +1,34 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-16 17:12:25
- * @LastEditTime: 2023-06-09 15:18:38
+ * @LastEditTime: 2023-06-15 10:43:07
  * @LastEditors: Libra
  * @Description:
  */
 import { Server } from "socket.io";
 import { server_websocket_port } from "../config";
-import type { WebContents } from "electron";
-import { MessageType } from "../../src/enum";
-import { updateHostsInfo, getHostById } from "../arp";
+import { updateClientInfo } from "../arp";
+import { WebContents } from "electron";
+
+let io: Server | null = null;
 
 const createSocket = (webContents: WebContents) => {
-  const io = new Server({
+  if (io) return;
+  io = new Server({
     /* options */
   });
 
   io.on("connection", socket => {
+    console.log("socket connected", socket.id);
+    // updateClientInfo
+    updateClientInfo(socket.handshake.query, webContents, "online");
     socket.on("disconnect", () => {
       console.log("socket disconnected", socket.id);
-      const host = getHostById(socket.id);
-      host && updateHostsInfo({ ...host, status: "offline" }, webContents);
+      updateClientInfo(socket.handshake.query, webContents, "offline");
     });
     socket.on("message", message => {
-      if (message.type === MessageType.CLIENT_INFO) {
-        updateHostsInfo(message.data, webContents);
-      }
-      if (!message.type) {
-        console.log("message", message);
-      }
+      console.log("socket message", message);
+      webContents.send("message", JSON.stringify(message));
     });
   });
   io.listen(server_websocket_port);
