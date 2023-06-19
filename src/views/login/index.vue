@@ -1,3 +1,9 @@
+<!--
+ * @Author: Libra
+ * @Date: 2023-06-12 17:53:50
+ * @LastEditors: Libra
+ * @Description: 
+-->
 <script setup lang="ts">
 import Motion from "./utils/motion";
 import { useRouter } from "vue-router";
@@ -95,9 +101,9 @@ const { isElectron } = useElectron();
 </script>
 
 <template>
-  <div class="select-none">
+  <div class="select-none relative">
     <img :src="bg" class="wave" />
-    <div class="flex-c absolute right-5 top-3">
+    <div class="flex-c absolute right-5 top-3 z-40">
       <!-- theme -->
       <el-switch
         v-model="dataTheme"

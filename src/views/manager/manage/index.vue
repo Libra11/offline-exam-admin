@@ -133,7 +133,6 @@ const ip = ref({
 let localIp = "";
 
 onMounted(async () => {
-  console.log(clientStore);
   createServer();
   ipcRendererEvent();
   getLocalIpSgement();

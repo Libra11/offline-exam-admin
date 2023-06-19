@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:44:24
- * @LastEditTime: 2023-06-15 14:54:04
+ * @LastEditTime: 2023-06-16 17:14:14
  * @LastEditors: Libra
  * @Description:/*
  */
@@ -15,7 +15,6 @@ import {
 } from "electron";
 import { discoverHosts, sendLocalIptoClient } from "./arp/index";
 import createSocket from "./socket";
-import os from "os";
 
 const isDev = process.env.VITE_DEV_SERVER_URL;
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
@@ -44,7 +43,6 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
-  console.log(os.release());
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
