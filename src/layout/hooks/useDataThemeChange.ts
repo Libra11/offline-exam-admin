@@ -9,6 +9,7 @@ import {
   lighten,
   toggleTheme
 } from "@pureadmin/theme/dist/browser-utils";
+import { useElectron } from "./useElectron";
 
 export function useDataThemeChange() {
   const { layoutTheme, layout } = useLayout();
@@ -78,6 +79,7 @@ export function useDataThemeChange() {
     }
   };
 
+  const { isElectron } = useElectron();
   /** 日间、夜间主题切换 */
   function dataThemeChange() {
     /* 如果当前是light夜间主题，默认切换到default主题 */
@@ -87,10 +89,22 @@ export function useDataThemeChange() {
       setLayoutThemeColor(useEpThemeStoreHook().epTheme);
     }
 
-    if (dataTheme.value) {
-      document.documentElement.classList.add("dark");
+    if (isElectron()) {
+      import("electron").then(({ ipcRenderer }) => {
+        if (dataTheme.value) {
+          document.documentElement.classList.add("dark");
+          ipcRenderer.send("setDarkMode", true);
+        } else {
+          document.documentElement.classList.remove("dark");
+          ipcRenderer.send("setDarkMode", false);
+        }
+      });
     } else {
-      document.documentElement.classList.remove("dark");
+      if (dataTheme.value) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     }
   }
 

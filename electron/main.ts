@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-30 10:44:24
- * @LastEditTime: 2023-06-16 17:14:14
+ * @LastEditTime: 2023-06-19 17:58:31
  * @LastEditors: Libra
  * @Description:/*
  */
@@ -11,6 +11,8 @@ import {
   BrowserWindow,
   ipcMain,
   IpcMainEvent,
+  Menu,
+  nativeTheme,
   powerSaveBlocker
 } from "electron";
 import { discoverHosts, sendLocalIptoClient } from "./arp/index";
@@ -21,10 +23,10 @@ process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 powerSaveBlocker.start("prevent-display-sleep");
 let win: BrowserWindow | null = null;
 function createWindow() {
-  // Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null);
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 2200,
+    height: 1200,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -52,6 +54,11 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
   app.quit();
+});
+
+// dark mode
+ipcMain.on("setDarkMode", (event: IpcMainEvent, arg: boolean) => {
+  nativeTheme.themeSource = arg ? "dark" : "light";
 });
 
 ipcMain.on("find-clients", (event: IpcMainEvent, ip: string) => {

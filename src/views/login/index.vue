@@ -86,24 +86,13 @@ onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
 });
 
-const activeName = ref("first");
-
-const handleClick = () => {
-  // clear form
-  ruleForm.value = {
-    username: "",
-    password: "",
-    code: ""
-  };
-};
-
 const { isElectron } = useElectron();
 </script>
 
 <template>
   <div class="select-none relative">
     <img :src="bg" class="wave" />
-    <div class="flex-c absolute right-5 top-3 z-40">
+    <div class="absolute right-5 top-3">
       <!-- theme -->
       <el-switch
         v-model="dataTheme"
@@ -113,130 +102,49 @@ const { isElectron } = useElectron();
         @change="dataThemeChange"
       />
     </div>
-    <el-tabs
-      v-if="isElectron()"
-      v-model="activeName"
-      type="card"
-      class="demo-tabs"
-      @tab-click="handleClick"
-    >
-      <el-tab-pane label="Admin" name="first"
-        ><div class="login-container">
-          <div class="img">
-            <component :is="toRaw(illustration)" />
-          </div>
-          <div class="login-box">
-            <div class="login-form">
-              <avatar class="avatar" />
-              <Motion>
-                <h2 class="outline-none">{{ title }}</h2>
-              </Motion>
+    <div class="login-container" v-if="isElectron()">
+      <div class="img">
+        <component :is="toRaw(illustration)" />
+      </div>
+      <div class="login-box">
+        <div class="login-form">
+          <avatar class="avatar" />
+          <Motion>
+            <h2 class="outline-none">{{ title }}</h2>
+          </Motion>
 
-              <el-form
-                ref="ruleFormRef"
-                :model="ruleForm"
-                :rules="loginRules"
-                size="large"
+          <el-form
+            ref="ruleFormRef"
+            :model="ruleForm"
+            :rules="loginRules"
+            size="large"
+          >
+            <Motion :delay="150">
+              <el-form-item prop="code">
+                <el-input
+                  clearable
+                  v-model="ruleForm.code"
+                  placeholder="登录码"
+                  :prefix-icon="useRenderIcon(Lock)"
+                />
+              </el-form-item>
+            </Motion>
+
+            <Motion :delay="250">
+              <el-button
+                class="w-full mt-4"
+                size="default"
+                type="primary"
+                :loading="loading"
+                @click="onLogin(ruleFormRef)"
               >
-                <Motion :delay="100">
-                  <el-form-item
-                    :rules="[
-                      {
-                        required: true,
-                        message: '请输入账号',
-                        trigger: 'blur'
-                      }
-                    ]"
-                    prop="username"
-                  >
-                    <el-input
-                      clearable
-                      v-model="ruleForm.username"
-                      placeholder="账号"
-                      :prefix-icon="useRenderIcon(User)"
-                    />
-                  </el-form-item>
-                </Motion>
-
-                <Motion :delay="150">
-                  <el-form-item prop="password">
-                    <el-input
-                      clearable
-                      show-password
-                      v-model="ruleForm.password"
-                      placeholder="密码"
-                      :prefix-icon="useRenderIcon(Lock)"
-                    />
-                  </el-form-item>
-                </Motion>
-
-                <Motion :delay="200">
-                  <div class="text-right text-gray-500 text-sm cursor-pointer">
-                    离线登录
-                  </div>
-                </Motion>
-                <Motion :delay="250">
-                  <el-button
-                    class="w-full mt-4"
-                    size="default"
-                    type="primary"
-                    :loading="loading"
-                    @click="onLogin(ruleFormRef)"
-                  >
-                    登录
-                  </el-button>
-                </Motion>
-              </el-form>
-            </div>
-          </div>
-        </div></el-tab-pane
-      >
-      <el-tab-pane label="Manager" name="second"
-        ><div class="login-container">
-          <div class="img">
-            <component :is="toRaw(illustration)" />
-          </div>
-          <div class="login-box">
-            <div class="login-form">
-              <avatar class="avatar" />
-              <Motion>
-                <h2 class="outline-none">{{ title }}</h2>
-              </Motion>
-
-              <el-form
-                ref="ruleFormRef"
-                :model="ruleForm"
-                :rules="loginRules"
-                size="large"
-              >
-                <Motion :delay="150">
-                  <el-form-item prop="code">
-                    <el-input
-                      clearable
-                      v-model="ruleForm.code"
-                      placeholder="登录码"
-                      :prefix-icon="useRenderIcon(Lock)"
-                    />
-                  </el-form-item>
-                </Motion>
-
-                <Motion :delay="250">
-                  <el-button
-                    class="w-full mt-4"
-                    size="default"
-                    type="primary"
-                    :loading="loading"
-                    @click="onLogin(ruleFormRef)"
-                  >
-                    登录
-                  </el-button>
-                </Motion>
-              </el-form>
-            </div>
-          </div>
-        </div></el-tab-pane
-      >
-    </el-tabs>
+                登录
+              </el-button>
+            </Motion>
+          </el-form>
+        </div>
+      </div>
+    </div>
     <div class="login-container" v-else>
       <div class="img">
         <component :is="toRaw(illustration)" />
