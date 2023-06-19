@@ -88,23 +88,15 @@ export function useDataThemeChange() {
     } else {
       setLayoutThemeColor(useEpThemeStoreHook().epTheme);
     }
-
     if (isElectron()) {
       import("electron").then(({ ipcRenderer }) => {
-        if (dataTheme.value) {
-          document.documentElement.classList.add("dark");
-          ipcRenderer.send("setDarkMode", true);
-        } else {
-          document.documentElement.classList.remove("dark");
-          ipcRenderer.send("setDarkMode", false);
-        }
+        const isDarkMode = dataTheme.value;
+        document.documentElement.classList.toggle("dark", isDarkMode);
+        ipcRenderer.send("setDarkMode", isDarkMode);
       });
     } else {
-      if (dataTheme.value) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+      const isDarkMode = dataTheme.value;
+      document.documentElement.classList.toggle("dark", isDarkMode);
     }
   }
 
