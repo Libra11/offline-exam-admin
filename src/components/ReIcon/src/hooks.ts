@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-12 17:53:50
+ * @LastEditors: Libra
+ * @Description:
+ */
 import { iconType } from "./types";
 import { h, defineComponent, Component } from "vue";
 import { IconifyIconOnline, IconifyIconOffline, FontIcon } from "../index";

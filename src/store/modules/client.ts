@@ -4,8 +4,8 @@
  * @LastEditors: Libra
  * @Description:
  */
-import { db } from "@/db/client";
-import { ClientItem } from "@electron/arp";
+import clients from "@/db/client";
+import { ClientItem } from "myTypes";
 import { IpcRendererEvent, ipcRenderer } from "electron";
 import { defineStore } from "pinia";
 
@@ -19,17 +19,17 @@ export const useClientStore = defineStore({
   actions: {
     async insertData(data: ClientItem) {
       try {
-        await db.clients.add(data);
+        await clients.addClient(data);
       } catch (error) {
         console.error(error);
       }
     },
 
     async getAllData() {
-      this.data = await db.clients.toArray();
+      this.data = await clients.getAllClient();
       this.allClientNum = this.data.length;
     },
-    async updateData(data) {
+    async updateData(data: ClientItem) {
       console.log("host-update");
       this.data.map((item: ClientItem) => {
         if (item.ip === data.ip) {
@@ -42,7 +42,7 @@ export const useClientStore = defineStore({
         (item: ClientItem) => item.onlineStatus === "online"
       ).length;
       // update db
-      db.clients.update(data.ip, data);
+      clients.updateClient(data);
     }
   }
 });

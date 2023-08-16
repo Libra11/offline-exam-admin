@@ -111,7 +111,7 @@ import { ElMessage, ElTable } from "element-plus";
 import { IpcRendererEvent, ipcRenderer } from "electron";
 import { getLocalIpAddress } from "@electron/util";
 import CusDialog from "@/components/CusDialog/index.vue";
-import { ClientItem } from "@electron/arp";
+import { ClientItem } from "myTypes";
 import { clientStore } from "@/store/modules/client";
 import { ArrowDown } from "@element-plus/icons-vue";
 

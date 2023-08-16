@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-17 09:44:22
- * @LastEditTime: 2023-06-15 10:22:45
+ * @LastEditTime: 2023-08-16 14:25:37
  * @LastEditors: Libra
  * @Description: arp
  */
@@ -11,21 +11,13 @@ import { client_websocket_port } from "../config";
 import { type WebContents } from "electron";
 import { MessageType } from "../../src/enum";
 import find, { IDevice } from "local-devices";
+import { ClientItem } from "myTypes";
 
 const sockets = new Map<string, Socket>();
 
 interface Host {
   ip: string;
   localIP: string;
-}
-
-export interface ClientItem {
-  ip: string;
-  os: string;
-  seatNum: number;
-  useStatus: "free" | "used";
-  onlineStatus: "online" | "offline" | "launched";
-  version: string;
 }
 
 function discoverHosts(webContents: WebContents, ipObj: any) {

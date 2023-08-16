@@ -1,3 +1,9 @@
+/*
+ * @Author: Libra
+ * @Date: 2023-06-12 17:53:50
+ * @LastEditors: Libra
+ * @Description:
+ */
 import App from "./App.vue";
 import router from "./router";
 import { setupStore } from "@/store";

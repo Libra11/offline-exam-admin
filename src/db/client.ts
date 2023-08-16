@@ -4,18 +4,23 @@
  * @LastEditors: Libra
  * @Description:
  */
-import Dexie, { Table } from "dexie";
-import { ClientItem } from "@electron/arp";
-
-export class Clients extends Dexie {
-  clients!: Table<ClientItem>;
-
-  constructor() {
-    super("myDatabase");
-    this.version(1).stores({
-      clients: "ip"
-    });
-  }
+import { ClientItem } from "myTypes";
+import db from ".";
+import { IndexableType } from "dexie";
+interface Clients {
+  getAllClient(): Promise<ClientItem[]>;
+  addClient(client: ClientItem): Promise<IndexableType>;
+  updateClient(client: ClientItem): Promise<IndexableType>;
 }
-
-export const db = new Clients();
+const clients: Clients = {
+  async getAllClient() {
+    return db.clients.toArray();
+  },
+  async addClient(client: ClientItem) {
+    return db.clients.add(client);
+  },
+  async updateClient(client: ClientItem) {
+    return db.clients.update(client.ip, client);
+  }
+};
+export default clients;
