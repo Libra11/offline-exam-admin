@@ -7,7 +7,7 @@
   "editor.tabSize": 2,
   "editor.formatOnPaste": true,
   "editor.guides.bracketPairs": "active",
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "off",
   "git.confirmSync": false,
   "workbench.startupEditor": "newUntitledFile",
   "editor.suggestSelection": "first",
@@ -23,9 +23,6 @@
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
   },
   "iconify.excludes": ["el"]
 }

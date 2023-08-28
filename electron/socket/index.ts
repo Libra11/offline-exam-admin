@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2023-05-16 17:12:25
- * @LastEditTime: 2023-06-15 10:43:07
+ * @LastEditTime: 2023-08-28 14:52:37
  * @LastEditors: Libra
  * @Description:
  */
@@ -26,8 +26,13 @@ const createSocket = (webContents: WebContents) => {
       console.log("socket disconnected", socket.id);
       updateClientInfo(socket.handshake.query, webContents, "offline");
     });
-    socket.on("message", message => {
+    socket.on("message", (message, callback) => {
       console.log("socket message", message);
+      callback({
+        code: 200,
+        data: "success",
+        message: message
+      });
       webContents.send("message", JSON.stringify(message));
     });
   });
